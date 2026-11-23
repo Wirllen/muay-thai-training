@@ -1,0 +1,11 @@
+{
+  "name": "Muay Thai Training",
+  "short_name": "Muay Thai",
+  "description": "Acompanhe seus treinos de musculação e Muay Thai.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0d120f",
+  "theme_color": "#101512",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

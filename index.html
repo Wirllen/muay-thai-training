@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101512">
+<meta name="description" content="Acompanhe seus treinos de musculação e Muay Thai.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Muay Thai Training</title>
+<style>
+:root{--bg:#0d120f;--panel:#171f1a;--panel2:#202b24;--line:#2d3b31;--text:#f2f6f2;--muted:#a5b2a8;--green:#9be6b0;--green2:#2e7d4b;--red:#ff7777}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:22px 18px 14px;background:linear-gradient(145deg,#1b3526,#101512 72%);border-bottom:1px solid var(--line)}
+.wrap{max-width:760px;margin:auto;padding:0 15px 32px}
+.brand{display:flex;align-items:center;justify-content:space-between}.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--green);font-weight:800}
+h1{font-size:27px;line-height:1.05;margin:7px 0 5px;letter-spacing:.02em}header p{color:#c4d0c7;margin:0}
+nav{display:flex;gap:7px;overflow:auto;padding:13px 0;position:sticky;top:0;background:var(--bg);z-index:4}
+nav button,.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:10px 13px;border-radius:12px;font-weight:700;white-space:nowrap}
+nav button.active,.primary{background:var(--green);color:#102016;border-color:var(--green)}
+section{display:none}section.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;margin:10px 0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.muted{color:var(--muted)}.small{font-size:12px}.tag{font-size:11px;color:var(--green);font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+h2{font-size:21px;margin:8px 0}h3{font-size:16px;margin:0 0 5px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:var(--panel2);padding:12px;border-radius:13px}.stat b{font-size:22px;display:block;color:var(--green)}
+.exercise{padding:13px 0;border-top:1px solid var(--line)}.exercise:first-of-type{border:0}
+.exercise p{margin:4px 0 8px;color:var(--muted);font-size:13px}
+.actions{display:flex;flex-wrap:wrap;gap:7px}.actions a,.video{color:var(--green);text-decoration:none;font-weight:700;font-size:13px}
+input{width:75px;background:#0d120f;color:var(--text);border:1px solid var(--line);padding:9px;border-radius:9px}
+label{font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:5px;margin:4px 8px 4px 0}
+button{cursor:pointer}.check{accent-color:#9be6b0;width:18px;height:18px}
+.btn{cursor:pointer}.btn.primary{background:var(--green);color:#102016}.btn.full{width:100%;margin-top:9px}
+.progress{height:9px;background:#2a352d;border-radius:20px;overflow:hidden;margin:8px 0}.progress span{display:block;height:100%;background:var(--green);width:0}
+.timer{text-align:center;padding:22px}.time{font-size:54px;font-weight:800;letter-spacing:.04em;margin:8px}
+textarea{width:100%;min-height:75px;background:#0d120f;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
+@media(min-width:620px){.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+ <div class="brand"><span class="eyebrow">PREPARAÇÃO FÍSICA • MUAY THAI</span><span>🥊</span></div>
+ <h1>MUAY THAI<br><span style="color:var(--green)">TRAINING</span></h1>
+ <p>Treine com propósito. Acompanhe sua evolução.</p>
+</div></header>
+<main class="wrap">
+<nav>
+<button class="active" data-tab="inicio">Início</button>
+<button data-tab="treinos">Treinos</button>
+<button data-tab="historico">Evolução</button>
+<button data-tab="timer">Cronômetro</button>
+</nav>
+<section id="inicio" class="active">
+ <div class="card">
+  <div class="tag">Seu painel</div><h2>Consistência vence intensidade.</h2>
+  <div class="stats">
+   <div class="stat"><b id="weekCount">0</b><span class="small muted">sessões nesta semana</span></div>
+   <div class="stat"><b id="allCount">0</b><span class="small muted">sessões concluídas</span></div>
+   <div class="stat"><b id="exerciseCount">0</b><span class="small muted">exercícios marcados</span></div>
+  </div>
+  <p class="muted small">Marque cada sessão depois de realizá-la. Os dados ficam salvos neste aparelho.</p>
+ </div>
+ <h2>Agenda sugerida</h2>
+ <div class="grid2">
+  <div class="card"><b>SEG</b><p>Musculação A · Pernas e força</p></div>
+  <div class="card"><b>TER</b><p>Muay Thai</p></div>
+  <div class="card"><b>QUA</b><p>Musculação B · Superiores</p></div>
+  <div class="card"><b>QUI</b><p>Musculação C · Potência leve</p></div>
+  <div class="card"><b>SEX</b><p>Muay Thai</p></div>
+  <div class="card"><b>SÁB</b><p>Musculação D · Corpo inteiro</p></div>
+ </div>
+ <button class="btn primary full" onclick="showTab('treinos')">Abrir meus treinos</button>
+</section>
+<section id="treinos">
+ <h2>Minha ficha</h2><p class="muted small">Selecione um treino, registre cargas e marque os exercícios concluídos.</p>
+ <div class="actions" id="workoutButtons"></div>
+ <div id="workoutContent"></div>
+</section>
+<section id="historico">
+ <h2>Minha evolução</h2>
+ <div class="card"><div class="stats">
+  <div class="stat"><b id="histSessions">0</b><span class="small muted">sessões</span></div>
+  <div class="stat"><b id="histChecks">0</b><span class="small muted">exercícios</span></div>
+  <div class="stat"><b id="histWeeks">0</b><span class="small muted">semanas ativas</span></div>
+ </div></div>
+ <div class="card"><h3>Evolução das cargas</h3>
+  <p class="muted small">Escolha um exercício para consultar os pesos registrados em cada data.</p>
+  <label for="loadExercise">Exercício</label><select id="loadExercise"></select>
+  <div id="loadProgress" class="card" style="background:var(--panel2);margin-top:10px"></div>
+ </div>
+ <div class="card"><h3>Registrar sessão</h3><label>Tipo de treino</label><select id="sessionType"><option>Muay Thai</option><option>Musculação A</option><option>Musculação B</option><option>Musculação C</option><option>Musculação D</option></select><br><label>Como foi?</label><textarea id="sessionNote" placeholder="Ex.: boa energia, cansado no final, técnica melhor..."></textarea><button class="btn primary full" id="saveSession">Salvar check-in</button></div>
+ <h3>Últimos registros</h3><div id="historyList"></div>
+</section>
+<section id="timer">
+ <div class="card timer">
+  <div class="tag">Descanso entre séries</div><div class="time" id="clock">01:30</div>
+  <div class="actions" style="justify-content:center">
+   <button class="btn" data-seconds="60">1 min</button><button class="btn" data-seconds="90">1:30</button><button class="btn" data-seconds="120">2 min</button>
+  </div><br>
+  <button class="btn primary" id="startTimer">Iniciar</button> <button class="btn" id="resetTimer">Zerar</button>
+ </div>
+ <p class="muted small">Use descansos maiores nos exercícios principais e recupere a respiração antes da próxima série.</p>
+</section>
+<footer>MUAY THAI TRAINING • Versão inicial • Consulte seu professor e respeite sua recuperação.</footer>
+</main>
+<script>
+const workouts = [
+{name:"A · Pernas e força",items:[
+["Agachamento livre com barra","3 × 8","Força geral das pernas.","agachamento livre com barra execução correta"],
+["Leg press","3 × 10","Quadríceps e glúteos.","leg press execução correta"],
+["Terra romeno com halteres","3 × 10","Posterior da coxa e glúteos.","levantamento terra romeno halteres execução"],
+["Panturrilha em pé","3 × 15","Panturrilhas e estabilidade do tornozelo.","elevação panturrilha em pé execução"],
+["Prancha abdominal","3 × 30–40 s","Estabilidade do tronco.","prancha abdominal execução correta"]
+]},
+{name:"B · Superiores",items:[
+["Supino reto com halteres","3 × 10","Peitoral, tríceps e ombros.","supino reto halteres execução"],
+["Puxada frontal","3 × 12","Costas e controle dos ombros.","puxada frontal pulley execução"],
+["Remada baixa","3 × 10","Costas e estabilidade escapular.","remada baixa polia execução"],
+["Elevação lateral","2 × 12","Resistência dos ombros.","elevação lateral halteres execução"],
+["Tríceps na polia","2 × 12","Tríceps.","triceps corda polia execução"],
+["Face pull","2 × 15","Parte posterior dos ombros.","face pull polia execução"]
+]},
+{name:"C · Potência e condicionamento",items:[
+["Agachamento com salto sem carga","2 × 5","Explosão; aterrisse suavemente. Se houver desconforto, faça agachamento rápido sem salto.","agachamento com salto técnica correta"],
+["Desenvolvimento com halteres","2 × 10","Fortalecimento controlado dos ombros.","desenvolvimento ombro halteres execução"],
+["Lenhador na polia","2 × 12 por lado","Rotação controlada do tronco.","woodchopper polia execução correta"],
+["Dead bug","2 × 10 por lado","Controle abdominal.","dead bug exercício execução"],
+["Bicicleta ergométrica","8 min","Ritmo leve a moderado para preservar a aula de sexta.","bicicleta ergométrica postura correta"]
+]},
+{name:"D · Corpo inteiro",items:[
+["Afundo reverso com halteres","2 × 10 por perna","Equilíbrio e força unilateral.","afundo reverso halteres execução"],
+["Mesa flexora","2 × 12","Posterior da coxa.","mesa flexora execução correta"],
+["Remada baixa","2 × 12","Resistência das costas.","remada baixa polia execução"],
+["Pallof press na polia","2 × 12 por lado","Estabilidade do core.","pallof press polia execução"],
+["Caminhada do fazendeiro","3 × 30 s","Pegada, postura e estabilidade.","farmer walk halteres execução"],
+["Esteira","8–10 min","Caminhada rápida confortável.","caminhada esteira postura"]
+]}
+];
+const KEY="mtt_v1";
+let data=JSON.parse(localStorage.getItem(KEY)||'{"checks":{},"sessions":[]}');
+data.checks=data.checks||{}; data.sessions=data.sessions||[]; data.loadHistory=data.loadHistory||[];
+let selected=0, timerSeconds=90, interval=null;
+function save(){localStorage.setItem(KEY,JSON.stringify(data));updateStats()}
+function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));if(id==="historico")renderHistory()}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+function renderWorkoutButtons(){document.getElementById("workoutButtons").innerHTML=workouts.map((w,i)=>`<button class="btn ${i===selected?'primary':''}" onclick="selectWorkout(${i})">${w.name.split(" · ")[0]}</button>`).join("")}
+function selectWorkout(i){selected=i;renderWorkouts()}
+function renderWorkouts(){
+ renderWorkoutButtons();let w=workouts[selected];
+ document.getElementById("workoutContent").innerHTML=`<div class="card"><div class="tag">Musculação ${w.name}</div><h2>${w.name}</h2><div class="progress"><span id="workProgress"></span></div><p class="small muted" id="workCount"></p>${w.items.map((it,j)=>{let id=selected+"-"+j,checked=!!data.checks[id];return `<div class="exercise"><div class="row"><div><h3>${j+1}. ${it[0]}</h3><b>${it[1]}</b></div><label style="margin:0">Carga (kg)<input id="load-${id}" aria-label="Carga em kg" placeholder="Opcional" type="number" min="0" step="0.5" value="${data.checks[id+"_kg"]||""}" style="width:90px"></label></div><p>${it[2]}</p><label><input class="check" type="checkbox" ${checked?'checked':''} onchange="toggleExercise('${id}',this.checked)"> Concluído</label><label><input class="check" id="bodyweight-${id}" type="checkbox"> Sem carga / peso corporal</label><div class="actions"><button class="btn" onclick="recordLoad(${selected},${j})">Salvar carga</button><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(it[3])}">▶ Ver vídeos demonstrativos</a></div></div>`}).join("")}<button class="btn primary full" onclick="finishWorkout('${w.name}')">Finalizar treino / check-in</button></div>`;
+ updateWorkProgress();
+}
+function toggleExercise(id,v){data.checks[id]=v;save();updateWorkProgress()}
+function recordLoad(workoutIndex,exerciseIndex){
+ const item=workouts[workoutIndex].items[exerciseIndex],id=workoutIndex+"-"+exerciseIndex;
+ const input=document.getElementById("load-"+id),body=document.getElementById("bodyweight-"+id);
+ const raw=input.value.trim(),isBody=body.checked;
+ if(raw===""&&!isBody){alert("Informe a carga ou marque \"Sem carga / peso corporal\". Você também pode deixar sem registro.");return}
+ const kg=raw===""?null:Number(raw);
+ if(kg!==null&&(!Number.isFinite(kg)||kg<0)){alert("Informe uma carga válida.");return}
+ data.loadHistory.unshift({exercise:item[0],workout:workouts[workoutIndex].name,kg,isBody,date:new Date().toISOString()});
+ if(kg!==null)data.checks[id+"_kg"]=String(kg);
+ save();renderHistory();
+ alert("Registro de carga salvo!");
+}
+function updateWorkProgress(){let n=workouts[selected].items.length,done=workouts[selected].items.filter((_,j)=>data.checks[selected+"-"+j]).length;let p=document.getElementById("workProgress");if(p)p.style.width=(done/n*100)+"%";let c=document.getElementById("workCount");if(c)c.textContent=done+" de "+n+" exercícios concluídos"}
+function finishWorkout(name){data.sessions.unshift({type:"Musculação "+name,date:new Date().toISOString(),note:"Treino concluído"});save();alert("Check-in registrado! Bom trabalho.");}
+document.getElementById("saveSession").onclick=()=>{let note=document.getElementById("sessionNote").value.trim();data.sessions.unshift({type:document.getElementById("sessionType").value,date:new Date().toISOString(),note});document.getElementById("sessionNote").value="";save();renderHistory();alert("Check-in salvo!")};
+function renderHistory(){
+ let list=document.getElementById("historyList");
+ list.innerHTML=data.sessions.slice(0,20).map(s=>`<div class="card"><div class="row"><b>${s.type}</b><span class="small muted">${new Date(s.date).toLocaleDateString("pt-BR")}</span></div><p class="muted small">${escapeHtml(s.note||"")}</p></div>`).join("")||'<p class="muted">Seus registros aparecerão aqui.</p>';
+ document.getElementById("histSessions").textContent=data.sessions.length;
+ document.getElementById("histChecks").textContent=Object.keys(data.checks).filter(k=>!k.endsWith("_kg")&&data.checks[k]).length;
+ document.getElementById("histWeeks").textContent=new Set(data.sessions.map(s=>{let d=new Date(s.date);d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d.toDateString()})).size;
+ const names=[...new Set(workouts.flatMap(w=>w.items.map(it=>it[0])))];
+ const sel=document.getElementById("loadExercise"),previous=sel.value;
+ sel.innerHTML=names.map(n=>`<option>${escapeHtml(n)}</option>`).join("");
+ if(names.includes(previous))sel.value=previous;
+ sel.onchange=renderLoadProgress;renderLoadProgress();
+}
+function renderLoadProgress(){
+ const sel=document.getElementById("loadExercise");if(!sel)return;
+ const name=sel.value,records=data.loadHistory.filter(r=>r.exercise===name).sort((a,b)=>new Date(a.date)-new Date(b.date));
+ const box=document.getElementById("loadProgress");
+ if(!records.length){box.innerHTML='<p class="muted small">Ainda não há registros deste exercício. Salve uma carga na ficha para começar seu histórico.</p>';return}
+ const numeric=records.filter(r=>r.kg!==null&&!r.isBody);
+ let chart='';
+ if(numeric.length>=2){
+   const vals=numeric.map(r=>r.kg),min=Math.min(...vals),max=Math.max(...vals),range=Math.max(1,max-min);
+   const pts=vals.map((v,i)=>`${20+i*(260/Math.max(1,vals.length-1))},${105-(v-min)/range*80}`).join(" ");
+   chart=`<svg viewBox="0 0 300 125" width="100%" role="img" aria-label="Gráfico de evolução de carga"><polyline points="${pts}" fill="none" stroke="#9be6b0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${vals.map((v,i)=>`<circle cx="${20+i*(260/Math.max(1,vals.length-1))}" cy="${105-(v-min)/range*80}" r="4" fill="#9be6b0"/>`).join("")}<text x="20" y="122" fill="#a5b2a8" font-size="9">${escapeHtml(new Date(numeric[0].date).toLocaleDateString("pt-BR"))}</text><text x="280" y="122" fill="#a5b2a8" font-size="9" text-anchor="end">${escapeHtml(new Date(numeric[numeric.length-1].date).toLocaleDateString("pt-BR"))}</text></svg>`;
+ }
+ box.innerHTML=`${numeric.length?`<div class="stats"><div class="stat"><b>${numeric[numeric.length-1].kg} kg</b><span class="small muted">última carga</span></div><div class="stat"><b>${Math.max(...numeric.map(r=>r.kg))} kg</b><span class="small muted">maior carga registrada</span></div><div class="stat"><b>${numeric.length}</b><span class="small muted">registros com peso</span></div></div>${chart}`:''}<h3 style="margin-top:12px">Histórico</h3>${records.slice().reverse().map(r=>`<div class="row" style="padding:8px 0;border-top:1px solid var(--line)"><span class="small">${new Date(r.date).toLocaleDateString("pt-BR")}</span><b>${r.isBody?'Peso corporal / sem carga':r.kg+' kg'}</b></div>`).join("")}`;
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function updateStats(){let now=new Date(),monday=new Date(now);monday.setDate(now.getDate()-((now.getDay()+6)%7));monday.setHours(0,0,0,0);document.getElementById("allCount").textContent=data.sessions.length;document.getElementById("weekCount").textContent=data.sessions.filter(s=>new Date(s.date)>=monday).length;document.getElementById("exerciseCount").textContent=Object.keys(data.checks).filter(k=>!k.endsWith("_kg")&&data.checks[k]).length}
+function render(){renderWorkouts();renderHistory();updateStats()}
+function setClock(){document.getElementById("clock").textContent=String(Math.floor(timerSeconds/60)).padStart(2,"0")+":"+String(timerSeconds%60).padStart(2,"0")}
+document.querySelectorAll("[data-seconds]").forEach(b=>b.onclick=()=>{timerSeconds=+b.dataset.seconds;clearInterval(interval);interval=null;document.getElementById("startTimer").textContent="Iniciar";setClock()});
+document.getElementById("startTimer").onclick=()=>{if(interval){clearInterval(interval);interval=null;document.getElementById("startTimer").textContent="Continuar";return}document.getElementById("startTimer").textContent="Pausar";interval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;setClock()}else{clearInterval(interval);interval=null;document.getElementById("startTimer").textContent="Iniciar";if(navigator.vibrate)navigator.vibrate([250,100,250]);alert("Descanso concluído!")}},1000)};
+document.getElementById("resetTimer").onclick=()=>{clearInterval(interval);interval=null;timerSeconds=90;setClock();document.getElementById("startTimer").textContent="Iniciar"};
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+render();setClock();
+</script>
+</body></html>

@@ -1,0 +1,22 @@
+MUAY THAI TRAINING — VERSÃO INICIAL
+
+O que inclui:
+- Quatro fichas de musculação adaptadas aos equipamentos informados.
+- Registro de cargas e check-in de exercícios.
+- Check-in de sessões de Muay Thai.
+- Histórico e contagem de sessões.
+- Cronômetro de descanso.
+- Links para buscar vídeos demonstrativos no YouTube.
+- Funcionamento offline após a primeira abertura, quando instalado/armazenado pelo navegador.
+
+COMO INSTALAR NO ANDROID:
+1. Publique esta pasta em um serviço de hospedagem HTTPS (por exemplo, GitHub Pages ou Netlify).
+2. Abra o endereço publicado no Chrome do Samsung.
+3. Menu ⋮ > Instalar app ou Adicionar à tela inicial.
+4. Confirme a instalação.
+
+IMPORTANTE:
+- PWA instalável exige hospedagem HTTPS (ou localhost para testes). Abrir o index.html diretamente não instala o app.
+- Os registros ficam salvos no armazenamento local do navegador/aparelho. Limpar os dados do navegador pode apagar o histórico.
+- Os botões de vídeo abrem uma busca do exercício no YouTube; não são vídeos próprios nem uma seleção editorial de instrutores.
+- Esta é uma versão inicial. Faça os exercícios com técnica e cargas adequadas e ajuste com seu professor/profissional de educação física.
