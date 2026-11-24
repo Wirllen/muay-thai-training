@@ -46,7 +46,9 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 <main class="wrap">
 <nav>
 <button class="active" data-tab="inicio">Início</button>
+<button data-tab="agenda">Agenda</button>
 <button data-tab="treinos">Treinos</button>
+<button data-tab="biblioteca">Biblioteca</button>
 <button data-tab="historico">Evolução</button>
 <button data-tab="timer">Cronômetro</button>
 </nav>
@@ -61,20 +63,22 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
   <p class="muted small">Marque cada sessão depois de realizá-la. Os dados ficam salvos neste aparelho.</p>
  </div>
  <h2>Agenda sugerida</h2>
- <div class="grid2">
-  <div class="card"><b>SEG</b><p>Musculação A · Pernas e força</p></div>
-  <div class="card"><b>TER</b><p>Muay Thai</p></div>
-  <div class="card"><b>QUA</b><p>Musculação B · Superiores</p></div>
-  <div class="card"><b>QUI</b><p>Musculação C · Potência leve</p></div>
-  <div class="card"><b>SEX</b><p>Muay Thai</p></div>
-  <div class="card"><b>SÁB</b><p>Musculação D · Corpo inteiro</p></div>
- </div>
+ <div id="homeSchedule" class="grid2"></div>
  <button class="btn primary full" onclick="showTab('treinos')">Abrir meus treinos</button>
 </section>
+<section id="agenda">
+ <h2>Minha semana</h2><p class="muted small">Escolha quais fichas deseja fazer em cada dia. Você pode colocar mais de um treino no mesmo dia.</p><div id="scheduleEditor"></div><button class="btn primary full" onclick="saveSchedule()">Salvar minha agenda</button>
+</section>
 <section id="treinos">
- <h2>Minha ficha</h2><p class="muted small">Selecione um treino, registre cargas e marque os exercícios concluídos.</p>
+ <h2>Meus treinos</h2><p class="muted small">Escolha uma ficha pronta ou criada por você.</p><div class="actions" style="margin-bottom:10px"><button class="btn" onclick="startFreeWorkout()">＋ Treino livre</button><button class="btn" onclick="showTab('biblioteca')">＋ Criar treino</button></div>
  <div class="actions" id="workoutButtons"></div>
  <div id="workoutContent"></div>
+</section>
+<section id="biblioteca">
+ <h2>Biblioteca de treinos</h2><p class="muted small">Crie fichas personalizadas sem alterar as fichas originais.</p>
+ <div class="card"><h3>Criar nova ficha</h3><label>Nome do treino</label><input id="newWorkoutName" type="text" placeholder="Ex.: Mobilidade e core" style="width:100%"><label>Categoria</label><select id="newWorkoutCategory" style="width:100%"><option>Força</option><option>Potência</option><option>Resistência</option><option>Mobilidade</option><option>Condicionamento</option><option>Muay Thai</option><option>Personalizado</option></select><label>Exercícios iniciais (um por linha: nome | séries/repetições | observação | busca de vídeo)</label><textarea id="newWorkoutItems" placeholder="Agachamento goblet | 3 x 10 | Controle a descida | agachamento goblet execução&#10;Prancha | 3 x 30 s | Tronco firme | prancha exercício"></textarea><button class="btn primary full" onclick="createWorkout()">Criar ficha</button></div>
+ <div id="libraryList"></div>
+ <div class="card"><h3>Adicionar exercício a uma ficha personalizada</h3><label>Ficha</label><select id="editWorkoutSelect" style="width:100%"></select><label>Nome do exercício</label><input id="newExerciseName" placeholder="Ex.: Flexão de braço" style="width:100%"><label>Séries e repetições</label><input id="newExerciseReps" placeholder="3 x 12" style="width:100%"><label>Observação</label><textarea id="newExerciseNotes" placeholder="Como executar ou adaptar..."></textarea><label>Busca de vídeo</label><input id="newExerciseVideo" placeholder="flexão de braço execução" style="width:100%"><button class="btn primary full" onclick="addExerciseToWorkout()">Adicionar exercício</button></div>
 </section>
 <section id="historico">
  <h2>Minha evolução</h2>
@@ -138,33 +142,34 @@ const workouts = [
 ];
 const KEY="mtt_v1";
 let data=JSON.parse(localStorage.getItem(KEY)||'{"checks":{},"sessions":[]}');
-data.checks=data.checks||{}; data.sessions=data.sessions||[]; data.loadHistory=data.loadHistory||[];
+data.checks=data.checks||{}; data.sessions=data.sessions||[]; data.loadHistory=data.loadHistory||[]; data.customWorkouts=data.customWorkouts||[]; data.schedule=data.schedule||{"0":["builtin-0"],"1":["muaythai"],"2":["builtin-1"],"3":["builtin-2"],"4":["muaythai"],"5":["builtin-3"],"6":[]};
 let selected=0, timerSeconds=90, interval=null;
 function save(){localStorage.setItem(KEY,JSON.stringify(data));updateStats()}
-function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));if(id==="historico")renderHistory()}
+function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));if(id==="historico")renderHistory();if(id==="agenda")renderSchedule();if(id==="biblioteca")renderLibrary();if(id==="inicio")renderHomeSchedule()}
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-function renderWorkoutButtons(){document.getElementById("workoutButtons").innerHTML=workouts.map((w,i)=>`<button class="btn ${i===selected?'primary':''}" onclick="selectWorkout(${i})">${w.name.split(" · ")[0]}</button>`).join("")}
-function selectWorkout(i){selected=i;renderWorkouts()}
+function allWorkouts(){return workouts.map((w,i)=>({id:"builtin-"+i,name:w.name,category:"Musculação",items:w.items,builtin:true,index:i})).concat(data.customWorkouts.map(w=>({...w,builtin:false})))}
+function workoutById(id){return allWorkouts().find(w=>w.id===String(id))}
+function workoutKey(w,j){return w.builtin?w.index+"-"+j:w.id+"-"+j}
+function selectedWorkout(){return typeof selected==="number"?workoutById("builtin-"+selected):workoutById(selected)}
+function selectWorkout(id){selected=String(id).startsWith("builtin-")?Number(String(id).split("-")[1]):String(id);renderWorkouts()}
+function renderWorkoutButtons(){document.getElementById("workoutButtons").innerHTML=allWorkouts().map(w=>'<button class="btn '+(String(w.id)===(typeof selected==="number"?"builtin-"+selected:String(selected))?'primary':'')+'" onclick="selectWorkout(\''+w.id+'\')">'+escapeHtml(w.name)+'</button>').join("")}
 function renderWorkouts(){
- renderWorkoutButtons();let w=workouts[selected];
- document.getElementById("workoutContent").innerHTML=`<div class="card"><div class="tag">Musculação ${w.name}</div><h2>${w.name}</h2><div class="progress"><span id="workProgress"></span></div><p class="small muted" id="workCount"></p>${w.items.map((it,j)=>{let id=selected+"-"+j,checked=!!data.checks[id];return `<div class="exercise"><div class="row"><div><h3>${j+1}. ${it[0]}</h3><b>${it[1]}</b></div><label style="margin:0">Carga (kg)<input id="load-${id}" aria-label="Carga em kg" placeholder="Opcional" type="number" min="0" step="0.5" value="${data.checks[id+"_kg"]||""}" style="width:90px"></label></div><p>${it[2]}</p><label><input class="check" type="checkbox" ${checked?'checked':''} onchange="toggleExercise('${id}',this.checked)"> Concluído</label><label><input class="check" id="bodyweight-${id}" type="checkbox"> Sem carga / peso corporal</label><div class="actions"><button class="btn" onclick="recordLoad(${selected},${j})">Salvar carga</button><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(it[3])}">▶ Ver vídeos demonstrativos</a></div></div>`}).join("")}<button class="btn primary full" onclick="finishWorkout('${w.name}')">Finalizar treino / check-in</button></div>`;
+ renderWorkoutButtons();let w=selectedWorkout();if(!w){document.getElementById("workoutContent").innerHTML='<div class="card">Crie uma ficha na Biblioteca ou escolha um treino.</div>';return}
+ document.getElementById("workoutContent").innerHTML='<div class="card"><div class="tag">'+escapeHtml(w.category||"Treino")+'</div><h2>'+escapeHtml(w.name)+'</h2><div class="progress"><span id="workProgress"></span></div><p class="small muted" id="workCount"></p>'+w.items.map((it,j)=>{let id=workoutKey(w,j),checked=!!data.checks[id];return '<div class="exercise"><div class="row"><div><h3>'+(j+1)+'. '+escapeHtml(it[0])+'</h3><b>'+escapeHtml(it[1]||"Sem prescrição")+'</b></div><label style="margin:0">Carga (kg)<input id="load-'+id+'" aria-label="Carga em kg" placeholder="Opcional" type="number" min="0" step="0.5" value="'+(data.checks[id+"_kg"]||"")+'" style="width:90px"></label></div><p>'+escapeHtml(it[2]||"")+'</p><label><input class="check" type="checkbox" '+(checked?'checked':'')+' onchange="toggleExercise(\''+id+'\',this.checked)"> Concluído</label><label><input class="check" id="bodyweight-'+id+'" type="checkbox"> Sem carga / peso corporal</label><div class="actions"><button class="btn" onclick="recordLoad(\''+w.id+'\','+j+')">Salvar carga</button><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+encodeURIComponent(it[3]||it[0])+'">▶ Ver vídeos demonstrativos</a></div></div>'}).join("")+'<button class="btn primary full" onclick="finishWorkout(\''+escapeHtml(w.name)+'\')">Finalizar treino / check-in</button></div>';
  updateWorkProgress();
 }
 function toggleExercise(id,v){data.checks[id]=v;save();updateWorkProgress()}
-function recordLoad(workoutIndex,exerciseIndex){
- const item=workouts[workoutIndex].items[exerciseIndex],id=workoutIndex+"-"+exerciseIndex;
- const input=document.getElementById("load-"+id),body=document.getElementById("bodyweight-"+id);
- const raw=input.value.trim(),isBody=body.checked;
- if(raw===""&&!isBody){alert("Informe a carga ou marque \"Sem carga / peso corporal\". Você também pode deixar sem registro.");return}
- const kg=raw===""?null:Number(raw);
- if(kg!==null&&(!Number.isFinite(kg)||kg<0)){alert("Informe uma carga válida.");return}
- data.loadHistory.unshift({exercise:item[0],workout:workouts[workoutIndex].name,kg,isBody,date:new Date().toISOString()});
- if(kg!==null)data.checks[id+"_kg"]=String(kg);
- save();renderHistory();
- alert("Registro de carga salvo!");
+function recordLoad(workoutId,exerciseIndex){
+ const w=workoutById(workoutId),item=w.items[exerciseIndex],id=workoutKey(w,exerciseIndex);
+ const input=document.getElementById("load-"+id),body=document.getElementById("bodyweight-"+id),raw=input.value.trim(),isBody=body.checked;
+ if(raw===""&&!isBody){alert("Informe a carga ou marque Sem carga / peso corporal. Você também pode deixar sem registro.");return}
+ const kg=raw===""?null:Number(raw);if(kg!==null&&(!Number.isFinite(kg)||kg<0)){alert("Informe uma carga válida.");return}
+ data.loadHistory.unshift({exercise:item[0],workout:w.name,kg,isBody,date:new Date().toISOString()});
+ if(kg!==null)data.checks[id+"_kg"]=String(kg);save();renderHistory();alert("Registro de carga salvo!");
 }
-function updateWorkProgress(){let n=workouts[selected].items.length,done=workouts[selected].items.filter((_,j)=>data.checks[selected+"-"+j]).length;let p=document.getElementById("workProgress");if(p)p.style.width=(done/n*100)+"%";let c=document.getElementById("workCount");if(c)c.textContent=done+" de "+n+" exercícios concluídos"}
-function finishWorkout(name){data.sessions.unshift({type:"Musculação "+name,date:new Date().toISOString(),note:"Treino concluído"});save();alert("Check-in registrado! Bom trabalho.");}
+function updateWorkProgress(){let w=selectedWorkout();if(!w)return;let n=w.items.length,done=w.items.filter((_,j)=>data.checks[workoutKey(w,j)]).length;let p=document.getElementById("workProgress");if(p)p.style.width=(n?done/n*100:0)+"%";let c=document.getElementById("workCount");if(c)c.textContent=done+" de "+n+" exercícios concluídos"}
+function finishWorkout(name){data.sessions.unshift({type:name,date:new Date().toISOString(),note:"Treino concluído"});save();alert("Check-in registrado! Bom trabalho.");}
+function startFreeWorkout(){data.sessions.unshift({type:"Treino livre",date:new Date().toISOString(),note:"Sessão iniciada sem ficha programada"});save();alert("Sessão livre registrada!");}
 document.getElementById("saveSession").onclick=()=>{let note=document.getElementById("sessionNote").value.trim();data.sessions.unshift({type:document.getElementById("sessionType").value,date:new Date().toISOString(),note});document.getElementById("sessionNote").value="";save();renderHistory();alert("Check-in salvo!")};
 function renderHistory(){
  let list=document.getElementById("historyList");
@@ -172,7 +177,7 @@ function renderHistory(){
  document.getElementById("histSessions").textContent=data.sessions.length;
  document.getElementById("histChecks").textContent=Object.keys(data.checks).filter(k=>!k.endsWith("_kg")&&data.checks[k]).length;
  document.getElementById("histWeeks").textContent=new Set(data.sessions.map(s=>{let d=new Date(s.date);d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d.toDateString()})).size;
- const names=[...new Set(workouts.flatMap(w=>w.items.map(it=>it[0])))];
+ const names=[...new Set(allWorkouts().flatMap(w=>w.items.map(it=>it[0])).concat(data.loadHistory.map(r=>r.exercise)))];
  const sel=document.getElementById("loadExercise"),previous=sel.value;
  sel.innerHTML=names.map(n=>`<option>${escapeHtml(n)}</option>`).join("");
  if(names.includes(previous))sel.value=previous;
@@ -192,9 +197,54 @@ function renderLoadProgress(){
  }
  box.innerHTML=`${numeric.length?`<div class="stats"><div class="stat"><b>${numeric[numeric.length-1].kg} kg</b><span class="small muted">última carga</span></div><div class="stat"><b>${Math.max(...numeric.map(r=>r.kg))} kg</b><span class="small muted">maior carga registrada</span></div><div class="stat"><b>${numeric.length}</b><span class="small muted">registros com peso</span></div></div>${chart}`:''}<h3 style="margin-top:12px">Histórico</h3>${records.slice().reverse().map(r=>`<div class="row" style="padding:8px 0;border-top:1px solid var(--line)"><span class="small">${new Date(r.date).toLocaleDateString("pt-BR")}</span><b>${r.isBody?'Peso corporal / sem carga':r.kg+' kg'}</b></div>`).join("")}`;
 }
+
+const dayNames=["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
+function renderSchedule(){
+ const root=document.getElementById("scheduleEditor");if(!root)return;
+ const opts=[{id:"muaythai",name:"Muay Thai"}].concat(allWorkouts().map(w=>({id:w.id,name:w.name})));
+ root.innerHTML=dayNames.map((day,i)=>'<div class="card"><h3>'+day+'</h3>'+opts.map(o=>'<label style="display:flex;margin:9px 0"><input class="check schedule-choice" type="checkbox" data-day="'+i+'" value="'+o.id+'" '+((data.schedule[i]||[]).includes(o.id)?'checked':'')+'> '+escapeHtml(o.name)+'</label>').join("")+'<p class="small muted">Marque todos os treinos desejados para este dia.</p></div>').join("");
+}
+function saveSchedule(){
+ let next={};dayNames.forEach((_,i)=>next[i]=[]);
+ document.querySelectorAll(".schedule-choice:checked").forEach(el=>next[el.dataset.day].push(el.value));
+ data.schedule=next;save();renderHomeSchedule();alert("Agenda atualizada!");
+}
+function renderHomeSchedule(){
+ const root=document.getElementById("homeSchedule");if(!root)return;
+ root.innerHTML=dayNames.map((day,i)=>{let ids=data.schedule[i]||[],names=ids.map(id=>id==="muaythai"?"Muay Thai":(workoutById(id)?.name||"Ficha removida"));return '<div class="card"><b>'+day.slice(0,3).toUpperCase()+'</b><p>'+(names.length?names.map(escapeHtml).join(" · "):'<span class="muted">Descanso / livre</span>')+'</p></div>'}).join("");
+}
+function createWorkout(){
+ let name=document.getElementById("newWorkoutName").value.trim(),category=document.getElementById("newWorkoutCategory").value,raw=document.getElementById("newWorkoutItems").value.trim();
+ if(!name){alert("Dê um nome para sua ficha.");return}
+ let items=raw?raw.split("\n").map(line=>{let p=line.split("|").map(x=>x.trim());return [p[0]||"Exercício",p[1]||"A definir",p[2]||"",p[3]||p[0]||""]}):[];
+ let id="custom-"+Date.now().toString(36);data.customWorkouts.push({id,name,category,items});save();
+ document.getElementById("newWorkoutName").value="";document.getElementById("newWorkoutItems").value="";
+ renderLibrary();selectWorkout(id);showTab("treinos");alert("Ficha criada! Adicione exercícios e coloque-a na agenda.");
+}
+function renderLibrary(){
+ let list=document.getElementById("libraryList"),sel=document.getElementById("editWorkoutSelect");if(!list||!sel)return;
+ let all=allWorkouts();sel.innerHTML=all.map(w=>'<option value="'+w.id+'">'+escapeHtml(w.name)+'</option>').join("");
+ list.innerHTML=all.map(w=>'<div class="card"><div class="row"><div><div class="tag">'+escapeHtml(w.category||"Treino")+'</div><h3>'+escapeHtml(w.name)+'</h3><p class="small muted">'+w.items.length+' exercício(s)'+(w.builtin?' · ficha original':' · personalizada')+'</p></div>'+(w.builtin?'<span class="tag">Original</span>':'<button class="btn" onclick="deleteWorkout(\''+w.id+'\')">Excluir</button>')+'</div><div class="actions"><button class="btn" onclick="selectWorkout(\''+w.id+'\');showTab(\'treinos\')">Abrir ficha</button></div></div>').join("");
+}
+function addExerciseToWorkout(){
+ let id=document.getElementById("editWorkoutSelect").value,w=workoutById(id);if(!w){alert("Escolha uma ficha.");return}
+ if(w.builtin){alert("As fichas originais são preservadas. Crie uma ficha personalizada para modificá-las.");return}
+ let name=document.getElementById("newExerciseName").value.trim();if(!name){alert("Informe o nome do exercício.");return}
+ w.items.push([name,document.getElementById("newExerciseReps").value.trim()||"A definir",document.getElementById("newExerciseNotes").value.trim(),document.getElementById("newExerciseVideo").value.trim()||name]);
+ ["newExerciseName","newExerciseReps","newExerciseNotes","newExerciseVideo"].forEach(id=>document.getElementById(id).value="");
+ save();renderLibrary();renderWorkouts();alert("Exercício adicionado!");
+}
+function deleteWorkout(id){
+ let w=workoutById(id);if(!w||w.builtin)return;
+ if(!confirm("Excluir esta ficha? O histórico de cargas já registrado será preservado."))return;
+ data.customWorkouts=data.customWorkouts.filter(x=>x.id!==id);
+ Object.keys(data.schedule).forEach(day=>data.schedule[day]=(data.schedule[day]||[]).filter(x=>x!==id));
+ save();renderLibrary();renderSchedule();renderHomeSchedule();selected=0;renderWorkouts();
+}
+
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function updateStats(){let now=new Date(),monday=new Date(now);monday.setDate(now.getDate()-((now.getDay()+6)%7));monday.setHours(0,0,0,0);document.getElementById("allCount").textContent=data.sessions.length;document.getElementById("weekCount").textContent=data.sessions.filter(s=>new Date(s.date)>=monday).length;document.getElementById("exerciseCount").textContent=Object.keys(data.checks).filter(k=>!k.endsWith("_kg")&&data.checks[k]).length}
-function render(){renderWorkouts();renderHistory();updateStats()}
+function render(){renderWorkouts();renderHistory();updateStats();renderHomeSchedule()}
 function setClock(){document.getElementById("clock").textContent=String(Math.floor(timerSeconds/60)).padStart(2,"0")+":"+String(timerSeconds%60).padStart(2,"0")}
 document.querySelectorAll("[data-seconds]").forEach(b=>b.onclick=()=>{timerSeconds=+b.dataset.seconds;clearInterval(interval);interval=null;document.getElementById("startTimer").textContent="Iniciar";setClock()});
 document.getElementById("startTimer").onclick=()=>{if(interval){clearInterval(interval);interval=null;document.getElementById("startTimer").textContent="Continuar";return}document.getElementById("startTimer").textContent="Pausar";interval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;setClock()}else{clearInterval(interval);interval=null;document.getElementById("startTimer").textContent="Iniciar";if(navigator.vibrate)navigator.vibrate([250,100,250]);alert("Descanso concluído!")}},1000)};
