@@ -301,7 +301,7 @@ function renderMissions(){
  const root=document.getElementById("missionList");if(!root)return;
  root.innerHTML=allWorkouts().map(w=>'<div class="mission"><div class="tag">'+escapeHtml(w.category||"MISSÃO")+'</div><h2>'+escapeHtml(w.name)+'</h2><p class="muted small">'+w.items.length+' exercícios · Recompensa: '+(50+w.items.length*10)+' XP</p><button class="game-action" onclick=\'beginMission("'+w.id+'")\'>ACEITAR MISSÃO</button></div>').join("")+'<div class="mission"><div class="tag">MISSÃO LIVRE</div><h2>Treino livre</h2><button class="btn" onclick="beginFreeMission()">INICIAR TREINO LIVRE</button></div>';
 }
-function beginMission(id){gameWorkoutId=id;gameIndex=0;gameFinished=false;showTab("game")}
+function beginMission(id){const w=workoutById(id);if(!w)return;gameWorkoutId=id;gameIndex=0;gameFinished=false;w.items.forEach((_,i)=>{data.checks[workoutKey(w,i)]=false});save();showTab("game")}
 function beginFreeMission(){data.sessions.unshift({type:"Treino livre",date:new Date().toISOString(),note:"Sessão livre iniciada"});save();showTab("timer")}
 function renderGame(){
  const root=document.getElementById("gameContent"),w=gameWorkoutId?workoutById(gameWorkoutId):null;if(!root)return;
