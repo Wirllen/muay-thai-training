@@ -35,6 +35,56 @@ button{cursor:pointer}.check{accent-color:#9be6b0;width:18px;height:18px}
 textarea{width:100%;min-height:75px;background:#0d120f;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px}
 footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 @media(min-width:620px){.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
+
+/* === HUNTER SYSTEM REDESIGN === */
+:root{--bg:#070b14;--panel:#0e1728;--panel2:#14223a;--line:#263d60;--text:#edf6ff;--muted:#91a7c5;--green:#65d9ff;--green2:#256b9d;--red:#ff718a;--cyan:#65d9ff;--purple:#9875ff;--gold:#ffd36a;color-scheme:dark}
+*{scrollbar-color:#29466c #080e19}
+body{background:radial-gradient(ellipse at 50% -15%,#19345b 0%,#0a1222 38%,#060a12 78%);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:.01em}
+header{position:relative;overflow:hidden;padding:30px 18px 22px;background:linear-gradient(120deg,rgba(11,24,44,.98),rgba(13,27,49,.92) 55%,rgba(21,22,52,.94));border-bottom:1px solid #31547d;box-shadow:0 12px 40px #0008}
+header:before{content:"";position:absolute;width:330px;height:330px;border:1px solid #65d9ff22;border-radius:50%;right:-110px;top:-190px;box-shadow:0 0 0 28px #65d9ff08,0 0 0 58px #65d9ff06}
+header:after{content:"HUNTER ASSOCIATION  //  SYSTEM ONLINE";display:block;position:absolute;right:18px;bottom:12px;font:700 9px/1 monospace;letter-spacing:.18em;color:#6e9bc5aa}
+.wrap{max-width:1040px;padding-left:20px;padding-right:20px}
+.brand .eyebrow,.tag{color:#73dcff;letter-spacing:.2em}
+.brand>span:last-child{font-size:28px;filter:drop-shadow(0 0 12px #65d9ff)}
+h1{font-size:clamp(30px,5vw,48px);letter-spacing:.08em;text-shadow:0 0 24px #65d9ff35}
+h1 span{color:#65d9ff!important}
+header p{color:#a9bfd9;font-size:13px;letter-spacing:.04em}
+.profilebar{max-width:520px;margin-top:20px;padding:10px 12px;border:1px solid #385b80;border-radius:14px;background:#071321cc;box-shadow:inset 0 0 18px #65d9ff0a}
+.profilebar>span{font:800 10px monospace;letter-spacing:.18em;color:#70dfff}
+select,input,textarea{background:#081321!important;color:var(--text)!important;border:1px solid #29466c!important;border-radius:10px!important;padding:10px!important}
+nav{top:0;padding:12px 0 14px;background:linear-gradient(180deg,#080e19f5,#080e19e8);backdrop-filter:blur(14px);border-bottom:1px solid #29466c;gap:8px}
+nav button,.btn{background:linear-gradient(145deg,#14243b,#0d192b);border:1px solid #2b4568;color:#c9def4;border-radius:11px;transition:transform .18s,border-color .18s,box-shadow .18s}
+nav button{font-size:12px;letter-spacing:.04em;padding:11px 15px}
+nav button:hover,.btn:hover{border-color:#65d9ff;box-shadow:0 0 16px #65d9ff18;transform:translateY(-1px)}
+nav button.active,.primary,.btn.primary{background:linear-gradient(110deg,#2b86b9,#6354b9);color:white;border-color:#72dfff;box-shadow:0 0 18px #4dbbff24}
+section{padding-top:12px;animation:systemEnter .28s ease}
+@keyframes systemEnter{from{opacity:.35;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.card,.gamepanel,.mission{position:relative;overflow:hidden;background:linear-gradient(145deg,#111f34f2,#0b1424f5);border:1px solid #29466c;border-radius:18px;padding:18px;box-shadow:0 12px 30px #0003,inset 0 1px #ffffff08}
+.card:before,.mission:before{content:"";position:absolute;left:0;top:0;width:3px;height:42px;background:linear-gradient(#65d9ff,transparent)}
+.gamepanel{background:radial-gradient(ellipse at 100% 0%,#324a7b66,transparent 52%),linear-gradient(140deg,#172846,#0b1425 72%);border-color:#5278a8;box-shadow:0 0 0 1px #65d9ff12,0 18px 42px #0005}
+.gamepanel h2{color:#e5f4ff;text-shadow:0 0 18px #65d9ff30}
+.mission{background:linear-gradient(135deg,#172744,#0c1526);border-color:#355781}
+h2{font-size:clamp(20px,3vw,25px);letter-spacing:.025em}
+h3{color:#e4f1ff}
+.stats{gap:10px}
+.stat{background:linear-gradient(145deg,#172b47,#0d192b);border:1px solid #29466c;border-radius:14px;padding:14px}
+.stat b{color:#72dcff;text-shadow:0 0 14px #65d9ff35}
+.xpbar,.progress{background:#081321;border:1px solid #2a4668;height:11px}
+.xpbar span{background:linear-gradient(90deg,#8b72ff,#65d9ff);box-shadow:0 0 12px #65d9ff88}
+.progress span{background:linear-gradient(90deg,#65d9ff,#9875ff)}
+.game-action{background:linear-gradient(100deg,#397fc0,#7257c8);border:1px solid #91dfff;color:white;border-radius:12px;box-shadow:0 7px 22px #3c79c544;cursor:pointer}
+.game-exercise{background:linear-gradient(145deg,#172945,#0d192c);border:1px solid #45638b;border-radius:16px}
+.reward{color:#ffd36a;text-shadow:0 0 18px #ffd36a44}
+.exercise{border-color:#243d5c}
+.exercise p,.muted{color:#91a7c5}
+.actions a,.video{color:#72dcff}
+.check{accent-color:#65d9ff}
+.timer{background:radial-gradient(circle at 50% 20%,#243c66,#0c1729 70%)}
+.time{color:#79ddff;text-shadow:0 0 26px #65d9ff55;font-variant-numeric:tabular-nums}
+footer{color:#66809f;border-top:1px solid #203752;margin-top:35px}
+@media(min-width:700px){.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}#inicio>.gamepanel{padding:26px}#inicio>.gamepanel .game-action{max-width:320px;margin-top:10px}.mission{padding:22px}}
+@media(max-width:520px){header{padding-top:23px}.wrap{padding-left:14px;padding-right:14px}.profilebar{flex-wrap:wrap}.profilebar>span{width:100%}nav{margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px}nav button{padding:10px 12px;font-size:11px}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{padding:10px 8px}.stat b{font-size:19px}.card,.gamepanel,.mission{padding:15px}}
+
 </style>
 </head>
 <body>
