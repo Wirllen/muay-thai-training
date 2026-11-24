@@ -229,8 +229,10 @@ function createWorkout(){
  renderLibrary();selectWorkout(id);showTab("treinos");alert("Ficha criada! Adicione exercícios e coloque-a na agenda.");
 }
 function renderLibrary(){
- let list=document.getElementById("libraryList"),sel=document.getElementById("editWorkoutSelect");if(!list||!sel)return;
- let all=allWorkouts();sel.innerHTML=all.map(w=>'<option value="'+w.id+'">'+escapeHtml(w.name)+'</option>').join("");
+ let list=document.getElementById("libraryList"),sel=document.getElementById("editWorkoutSelect"),ren=document.getElementById("renameWorkoutSelect");if(!list||!sel)return;
+ let all=allWorkouts();
+ sel.innerHTML=all.map(w=>'<option value="'+w.id+'">'+escapeHtml(w.name)+'</option>').join("");
+ if(ren)ren.innerHTML=all.map(w=>'<option value="'+w.id+'">'+escapeHtml(w.name)+'</option>').join("");
  list.innerHTML=all.map(w=>'<div class="card"><div class="row"><div><div class="tag">'+escapeHtml(w.category||"Treino")+'</div><h3>'+escapeHtml(w.name)+'</h3><p class="small muted">'+w.items.length+' exercício(s)'+(w.builtin?' · ficha original':' · personalizada')+'</p></div>'+(w.builtin?'<span class="tag">Original</span>':'<button class="btn" onclick="deleteWorkout(\''+w.id+'\')">Excluir</button>')+'</div><div class="actions"><button class="btn" onclick="selectWorkout(\''+w.id+'\');showTab(\'treinos\')">Abrir ficha</button></div></div>').join("");
 }
 function addExerciseToWorkout(){
