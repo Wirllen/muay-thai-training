@@ -174,7 +174,7 @@ function recordLoad(workoutId,exerciseIndex){
  data.loadHistory.unshift({exercise:item[0],workout:w.name,kg,isBody,date:new Date().toISOString()});
  if(kg!==null)data.checks[id+"_kg"]=String(kg);save();renderHistory();alert("Registro de carga salvo!");
 }
-function updateWorkProgress(){let w=selectedWorkout();if(!w)return;let n=w.items.length,done=w.items.filter((_,j)=>data.missionChecks&&data.missionChecks[workoutKey(w,j)]).length;let p=document.getElementById("workProgress");if(p)p.style.width=(n?done/n*100:0)+"%";let c=document.getElementById("workCount");if(c)c.textContent=done+" de "+n+" exercícios concluídos"}
+function updateWorkProgress(){let w=selectedWorkout();if(!w)return;let n=w.items.length,done=w.items.filter((_,j)=>data.checks[workoutKey(w,j)]).length;let p=document.getElementById("workProgress");if(p)p.style.width=(n?done/n*100:0)+"%";let c=document.getElementById("workCount");if(c)c.textContent=done+" de "+n+" exercícios concluídos"}
 function finishWorkout(name){data.sessions.unshift({type:name,date:new Date().toISOString(),note:"Treino concluído"});awardXP(50);alert("Check-in registrado! +50 XP.");}
 function startFreeWorkout(){data.sessions.unshift({type:"Treino livre",date:new Date().toISOString(),note:"Sessão iniciada sem ficha programada"});save();alert("Sessão livre registrada!");}
 document.getElementById("saveSession").onclick=()=>{let note=document.getElementById("sessionNote").value.trim();data.sessions.unshift({type:document.getElementById("sessionType").value,date:new Date().toISOString(),note});document.getElementById("sessionNote").value="";save();renderHistory();alert("Check-in salvo!")};
