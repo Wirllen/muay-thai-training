@@ -93,6 +93,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
   <div id="loadProgress" class="card" style="background:var(--panel2);margin-top:10px"></div>
  </div>
  <div class="card"><h3>Registrar sessão</h3><label>Tipo de treino</label><select id="sessionType"><option>Muay Thai</option><option>Musculação A</option><option>Musculação B</option><option>Musculação C</option><option>Musculação D</option></select><br><label>Como foi?</label><textarea id="sessionNote" placeholder="Ex.: boa energia, cansado no final, técnica melhor..."></textarea><button class="btn primary full" id="saveSession">Salvar check-in</button></div>
+ <div class="card"><h3>Backup dos meus dados</h3><p class="muted small">Exporte suas fichas, agenda, cargas e check-ins para guardar uma cópia. Importe o arquivo neste ou em outro aparelho.</p><div class="actions"><button class="btn" onclick="exportBackup()">Exportar backup</button><label class="btn" style="cursor:pointer">Importar backup<input id="backupFile" type="file" accept="application/json,.json" style="display:none" onchange="importBackup(this)"></label></div></div>
  <h3>Últimos registros</h3><div id="historyList"></div>
 </section>
 <section id="timer">
@@ -240,6 +241,26 @@ function deleteWorkout(id){
  data.customWorkouts=data.customWorkouts.filter(x=>x.id!==id);
  Object.keys(data.schedule).forEach(day=>data.schedule[day]=(data.schedule[day]||[]).filter(x=>x!==id));
  save();renderLibrary();renderSchedule();renderHomeSchedule();selected=0;renderWorkouts();
+}
+
+
+function exportBackup(){
+ const payload={app:"Muay Thai Training",version:2,exportedAt:new Date().toISOString(),data};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="muay-thai-training-backup-"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(url);
+}
+function importBackup(input){
+ const file=input.files&&input.files[0];if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{try{
+  const parsed=JSON.parse(reader.result),incoming=parsed.data||parsed;
+  if(!incoming||typeof incoming!=="object"||!incoming.sessions||!incoming.checks){throw new Error("Arquivo incompatível")}
+  if(!confirm("Importar este backup vai substituir os dados atuais neste aparelho. Deseja continuar?")){input.value="";return}
+  data={...incoming,checks:incoming.checks||{},sessions:incoming.sessions||[],loadHistory:incoming.loadHistory||[],customWorkouts:incoming.customWorkouts||[],schedule:incoming.schedule||{"0":[],"1":[],"2":[],"3":[],"4":[],"5":[],"6":[]}};
+  save();render();renderLibrary();renderHomeSchedule();alert("Backup importado com sucesso!");
+ }catch(e){alert("Não foi possível importar. Confira se escolheu um backup válido do aplicativo.")}input.value=""};
+ reader.readAsText(file);
 }
 
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
