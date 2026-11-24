@@ -101,6 +101,7 @@ footer{color:#66809f;border-top:1px solid #203752;margin-top:35px}
 <button data-tab="biblioteca">Biblioteca</button>
 <button data-tab="historico">Evolução</button>
 <button data-tab="timer">Cronômetro</button>
+<button data-tab="projeto">Projeto</button>
 </nav>
 <section id="inicio" class="active">
  <div class="gamepanel"><div class="tag">SISTEMA DE CAÇADOR</div><h2 id="playerGreeting">Bem-vindo, caçador.</h2><div class="row"><b id="playerLevel">NÍVEL 1</b><b id="playerXp">0 / 100 XP</b></div><div class="xpbar"><span id="playerXpBar"></span></div><p id="playerTitle" class="small muted">Desperto</p><button class="game-action" onclick="showTab('missoes')">▶ INICIAR MISSÃO</button></div><div class="card">
@@ -155,6 +156,23 @@ footer{color:#66809f;border-top:1px solid #203752;margin-top:35px}
   <button class="btn primary" id="startTimer">Iniciar</button> <button class="btn" id="resetTimer">Zerar</button>
  </div>
  <p class="muted small">Use descansos maiores nos exercícios principais e recupere a respiração antes da próxima série.</p>
+</section>
+<section id="projeto">
+ <div class="tag">HUNTER DEV • CENTRAL DE DESENVOLVIMENTO</div>
+ <h2>Projeto: Sistema de recompensas fitness</h2>
+ <p class="muted small">Sua jornada de desenvolvimento. Marque as tarefas concluídas, acompanhe cada etapa e registre suas decisões. O progresso fica salvo neste aparelho, separado dos dados dos treinos.</p>
+ <div class="gamepanel">
+  <div class="row"><span class="tag">PROGRESSO DA JORNADA</span><b id="roadmapPercent">0%</b></div>
+  <div class="xpbar"><span id="roadmapBar"></span></div>
+  <div class="stats" style="margin-top:12px">
+   <div class="stat"><b id="roadmapDone">0</b><span class="small muted">tarefas feitas</span></div>
+   <div class="stat"><b id="roadmapTotal">0</b><span class="small muted">tarefas totais</span></div>
+   <div class="stat"><b id="roadmapStages">0/9</b><span class="small muted">etapas concluídas</span></div>
+  </div>
+ </div>
+ <div class="card"><h3>Como usar</h3><p class="muted small">Abra uma etapa, marque os post-its conforme concluir e use as anotações para registrar dúvidas, decisões e links dos diagramas. Não precisa seguir tudo de uma vez: avance etapa por etapa.</p><div class="actions"><button class="btn" onclick="roadmapExpandAll(true)">Expandir etapas</button><button class="btn" onclick="roadmapExpandAll(false)">Recolher etapas</button><button class="btn" onclick="roadmapExport()">Exportar progresso</button></div></div>
+ <div id="roadmapStagesList"></div>
+ <div class="card"><h3>Diário de desenvolvimento</h3><label for="roadmapNotes">Anotações gerais, decisões e dúvidas</label><textarea id="roadmapNotes" placeholder="Ex.: Hoje defini que o treino será validado por foto..."></textarea><button class="btn primary full" onclick="roadmapSaveNotes()">Salvar anotações</button></div>
 </section>
 <footer>MUAY THAI TRAINING • Versão inicial • Consulte seu professor e respeite sua recuperação.</footer>
 </main>
@@ -387,6 +405,44 @@ document.querySelectorAll("[data-seconds]").forEach(b=>b.onclick=()=>{timerSecon
 document.getElementById("startTimer").onclick=()=>{if(interval){clearInterval(interval);interval=null;document.getElementById("startTimer").textContent="Continuar";return}document.getElementById("startTimer").textContent="Pausar";interval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;setClock()}else{clearInterval(interval);interval=null;document.getElementById("startTimer").textContent="Iniciar";if(navigator.vibrate)navigator.vibrate([250,100,250]);alert("Descanso concluído!")}},1000)};
 document.getElementById("resetTimer").onclick=()=>{clearInterval(interval);interval=null;timerSeconds=90;setClock();document.getElementById("startTimer").textContent="Iniciar"};
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+
+const roadmapData=[
+{title:"ETAPA 01 — Planejamento",color:"#f2c94c",tasks:["Definir objetivo do sistema.","Definir público inicial.","Definir funcionalidades do MVP.","Definir regras financeiras.","Definir identidade visual.","Planejar possibilidades de expansão."]},
+{title:"ETAPA 02 — Requisitos",color:"#4b9de8",tasks:["Documentar requisitos funcionais.","Documentar requisitos não funcionais.","Definir perfil da usuária.","Definir perfil do administrador.","Definir regras de login e permissões.","Formalizar aprovação de treinos.","Formalizar regras de resgate.","Definir regras de bônus semanal.","Escrever histórias de usuário.","Criar critérios de aceitação."]},
+{title:"ETAPA 03 — Modelagem",color:"#a78bfa",tasks:["Criar diagrama de casos de uso.","Criar diagrama de atividades.","Criar fluxograma de check-in.","Criar fluxograma de resgate.","Criar diagrama entidade-relacionamento.","Criar modelo lógico do banco.","Definir arquitetura inicial."]},
+{title:"ETAPA 04 — Lógica Python",color:"#48b879",tasks:["Preparar ambiente Python.","Criar estrutura inicial do projeto.","Aprender funções.","Criar lógica de usuários.","Implementar login conceitual.","Criar lógica de check-in.","Impedir registros duplicados.","Criar lógica de aprovação.","Criar lógica de créditos.","Criar lógica da carteira.","Criar lógica de recompensas.","Criar lógica de resgates.","Criar testes das funções."]},
+{title:"ETAPA 05 — Banco de dados",color:"#e05c68",tasks:["Instalar e configurar SQLite.","Criar banco de dados.","Criar tabela de usuários.","Criar tabela de treinos.","Criar tabela de carteira.","Criar tabela de movimentações.","Criar tabela de recompensas.","Criar tabela de resgates.","Relacionar as tabelas.","Testar consultas e integridade."]},
+{title:"ETAPA 06 — Sistema de recompensas",color:"#ed9b42",tasks:["Cadastrar recompensas.","Listar recompensas disponíveis.","Solicitar resgate.","Aprovar resgate.","Recusar resgate.","Garantir que não haja desconto duplicado.","Criar histórico de resgates."]},
+{title:"ETAPA 07 — Interface web",color:"#39bdb6",tasks:["Aprender estrutura Flask.","Criar página de login.","Criar painel da usuária.","Criar painel administrativo.","Criar página de check-in.","Criar página da carteira.","Criar página de recompensas.","Criar página de histórico.","Desenvolver identidade visual.","Adaptar para celulares."]},
+{title:"ETAPA 08 — Testes",color:"#9aa6b2",tasks:["Testar login e permissões.","Testar check-in duplicado.","Testar aprovação de treino.","Testar saldo da carteira.","Testar resgates.","Testar segurança dos dados.","Testar interface no celular.","Corrigir problemas encontrados."]},
+{title:"ETAPA 09 — Publicação",color:"#e68bb5",tasks:["Preparar ambiente de produção.","Configurar banco de produção.","Configurar armazenamento de fotografias.","Configurar HTTPS.","Publicar aplicação.","Realizar testes finais.","Entregar acesso à usuária.","Documentar utilização."]}
+];
+const ROADMAP_KEY="mtt_hunter_dev_roadmap_v1";
+function roadmapLoad(){try{return JSON.parse(localStorage.getItem(ROADMAP_KEY))||{checks:{},notes:""}}catch(e){return{checks:{},notes:""}}}
+let roadmapState=roadmapLoad();
+function roadmapSave(){localStorage.setItem(ROADMAP_KEY,JSON.stringify(roadmapState));roadmapRender()}
+function roadmapRender(){
+ const root=document.getElementById("roadmapStagesList");if(!root)return;
+ let total=0,done=0,finished=0;
+ root.innerHTML=roadmapData.map((stage,si)=>{
+  const count=stage.tasks.length,completed=stage.tasks.filter((_,ti)=>roadmapState.checks[si+"-"+ti]).length;
+  total+=count;done+=completed;if(completed===count)finished++;
+  return '<details class="card roadmap-stage" style="border-left:4px solid '+stage.color+'"><summary style="cursor:pointer;list-style:none"><div class="row"><div><div class="tag" style="color:'+stage.color+'">FASE '+String(si+1).padStart(2,"0")+'</div><h3>'+stage.title+'</h3></div><b>'+completed+'/'+count+'</b></div><div class="progress"><span style="width:'+(completed/count*100)+'%;background:'+stage.color+'"></span></div></summary><div style="padding-top:10px">'+stage.tasks.map((task,ti)=>'<label style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #263d6033;font-size:13px;color:var(--text)"><input class="check roadmap-check" type="checkbox" '+(roadmapState.checks[si+"-"+ti]?"checked":"")+' onchange="roadmapToggle('+si+','+ti+',this.checked)" style="flex:0 0 18px;margin-top:2px"><span style="'+(roadmapState.checks[si+"-"+ti]?"text-decoration:line-through;opacity:.65":"")+'">'+task+'</span></label>').join("")+'</div></details>';
+ }).join("");
+ const pct=total?Math.round(done/total*100):0;
+ document.getElementById("roadmapPercent").textContent=pct+"%";
+ document.getElementById("roadmapBar").style.width=pct+"%";
+ document.getElementById("roadmapDone").textContent=done;
+ document.getElementById("roadmapTotal").textContent=total;
+ document.getElementById("roadmapStages").textContent=finished+"/9";
+ document.getElementById("roadmapNotes").value=roadmapState.notes||"";
+}
+function roadmapToggle(si,ti,value){roadmapState.checks[si+"-"+ti]=value;roadmapSave()}
+function roadmapSaveNotes(){roadmapState.notes=document.getElementById("roadmapNotes").value;localStorage.setItem(ROADMAP_KEY,JSON.stringify(roadmapState));alert("Anotações salvas!")}
+function roadmapExpandAll(open){document.querySelectorAll(".roadmap-stage").forEach(x=>x.open=open)}
+function roadmapExport(){const blob=new Blob([JSON.stringify({project:"Sistema de recompensas fitness",exportedAt:new Date().toISOString(),state:roadmapState},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="hunter-dev-progresso.json";a.click();URL.revokeObjectURL(a.href)}
+
+roadmapRender();
 render();setClock();
 </script>
 </body></html>
