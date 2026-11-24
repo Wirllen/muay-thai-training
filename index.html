@@ -142,13 +142,19 @@ const workouts = [
 ]}
 ];
 const KEY="mtt_v1";
-let data=JSON.parse(localStorage.getItem(KEY)||'{"checks":{},"sessions":[]}');
-data.checks=data.checks||{}; data.sessions=data.sessions||[]; data.loadHistory=data.loadHistory||[]; data.customWorkouts=data.customWorkouts||[]; data.schedule=data.schedule||{"0":["builtin-0"],"1":["muaythai"],"2":["builtin-1"],"3":["builtin-2"],"4":["muaythai"],"5":["builtin-3"],"6":[]};
-let selected=0, timerSeconds=90, interval=null;
-function save(){localStorage.setItem(KEY,JSON.stringify(data));updateStats()}
-function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));if(id==="historico")renderHistory();if(id==="agenda")renderSchedule();if(id==="biblioteca")renderLibrary();if(id==="inicio")renderHomeSchedule()}
+const emptyData=()=>({checks:{},sessions:[],loadHistory:[],customWorkouts:[],workoutOverrides:{},schedule:{"0":["builtin-0"],"1":["muaythai"],"2":["builtin-1"],"3":["builtin-2"],"4":["muaythai"],"5":["builtin-3"],"6":[]}});
+let stored=JSON.parse(localStorage.getItem(KEY)||"null"),profiles=[],activeProfileId="";
+if(stored&&Array.isArray(stored.profiles)){profiles=stored.profiles;activeProfileId=stored.activeProfileId||profiles[0]?.id||""}
+else{profiles=[{id:"player-main",name:"Jogador",level:1,xp:0,title:"Desperto",data:{...emptyData(),...(stored||{})}}];activeProfileId="player-main"}
+if(!profiles.length){profiles=[{id:"player-main",name:"Jogador",level:1,xp:0,title:"Desperto",data:emptyData()}];activeProfileId="player-main"}
+let activeProfile=profiles.find(p=>p.id===activeProfileId)||profiles[0];activeProfileId=activeProfile.id;
+let data={...emptyData(),...(activeProfile.data||{})};activeProfile.data=data;
+let selected=0,timerSeconds=90,interval=null,gameWorkoutId=null,gameIndex=0,gameFinished=false;
+function persistProfiles(){activeProfile.data=data;localStorage.setItem(KEY,JSON.stringify({schema:2,activeProfileId,profiles}))}
+function save(){persistProfiles();updateStats()}
+function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));if(id==="historico")renderHistory();if(id==="agenda")renderSchedule();if(id==="biblioteca")renderLibrary();if(id==="inicio")renderHomeSchedule();if(id==="missoes")renderMissions();if(id==="game")renderGame()}
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-function allWorkouts(){return workouts.map((w,i)=>({id:"builtin-"+i,name:w.name,category:"Musculação",items:w.items,builtin:true,index:i})).concat(data.customWorkouts.map(w=>({...w,builtin:false})))}
+function allWorkouts(){return workouts.map((w,i)=>({id:"builtin-"+i,name:(data.workoutOverrides["builtin-"+i]||{}).name||w.name,category:"Musculação",items:w.items,builtin:true,index:i})).concat(data.customWorkouts.map(w=>({...w,builtin:false})))}
 function workoutById(id){return allWorkouts().find(w=>w.id===String(id))}
 function workoutKey(w,j){return w.builtin?w.index+"-"+j:w.id+"-"+j}
 function selectedWorkout(){return typeof selected==="number"?workoutById("builtin-"+selected):workoutById(selected)}
