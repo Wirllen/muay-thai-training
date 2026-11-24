@@ -1,22 +1,25 @@
-MUAY THAI TRAINING — VERSÃO INICIAL
+MUAY THAI TRAINING — VERSÃO 2 (TREINOS FLEXÍVEIS)
 
-O que inclui:
-- Quatro fichas de musculação adaptadas aos equipamentos informados.
-- Registro de cargas e check-in de exercícios.
-- Check-in de sessões de Muay Thai.
-- Histórico e contagem de sessões.
-- Cronômetro de descanso.
-- Links para buscar vídeos demonstrativos no YouTube.
-- Funcionamento offline após a primeira abertura, quando instalado/armazenado pelo navegador.
+NOVIDADES:
+- Agenda semanal personalizável: escolha vários treinos para cada dia.
+- Biblioteca de treinos com criação de fichas personalizadas.
+- Adição de exercícios às fichas criadas pelo usuário.
+- Treino livre para registrar uma sessão sem ficha programada.
+- Fichas originais A, B, C e D continuam disponíveis.
+- Diário de cargas, histórico e check-ins mantidos no armazenamento local.
+- Cronômetro e links de busca de vídeos demonstrativos.
 
-COMO INSTALAR NO ANDROID:
-1. Publique esta pasta em um serviço de hospedagem HTTPS (por exemplo, GitHub Pages ou Netlify).
-2. Abra o endereço publicado no Chrome do Samsung.
+DADOS:
+- Esta versão mantém a chave local mtt_v1 para preservar os registros da versão anterior.
+- Fichas e agenda personalizadas ficam salvas no mesmo aparelho/navegador.
+- Não há sincronização automática entre dispositivos; faça backup antes de limpar dados do navegador.
+- As fichas originais não são editáveis; crie fichas personalizadas para adaptar os exercícios.
+- Excluir uma ficha personalizada remove-a da agenda, mas não apaga os registros históricos de cargas.
+
+INSTALAÇÃO:
+1. Publique os arquivos na raiz do GitHub Pages.
+2. Abra o endereço HTTPS no Chrome do Android.
 3. Menu ⋮ > Instalar app ou Adicionar à tela inicial.
-4. Confirme a instalação.
 
-IMPORTANTE:
-- PWA instalável exige hospedagem HTTPS (ou localhost para testes). Abrir o index.html diretamente não instala o app.
-- Os registros ficam salvos no armazenamento local do navegador/aparelho. Limpar os dados do navegador pode apagar o histórico.
-- Os botões de vídeo abrem uma busca do exercício no YouTube; não são vídeos próprios nem uma seleção editorial de instrutores.
-- Esta é uma versão inicial. Faça os exercícios com técnica e cargas adequadas e ajuste com seu professor/profissional de educação física.
+OBSERVAÇÃO:
+Os vídeos abrem buscas no YouTube; não são vídeos incorporados. Ajuste os exercícios com seu professor/profissional de educação física.
