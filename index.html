@@ -15,7 +15,7 @@ header{padding:22px 18px 14px;background:linear-gradient(145deg,#1b3526,#101512 
 .wrap{max-width:760px;margin:auto;padding:0 15px 32px}
 .brand{display:flex;align-items:center;justify-content:space-between}.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--green);font-weight:800}
 h1{font-size:27px;line-height:1.05;margin:7px 0 5px;letter-spacing:.02em}header p{color:#c4d0c7;margin:0}
-nav{display:flex;gap:7px;overflow:auto;padding:13px 0;position:sticky;top:0;background:var(--bg);z-index:4}
+:root{--cyan:#65d9ff;--purple:#a98cff;--gold:#ffd36a}.profilebar{display:flex;gap:8px;align-items:center;margin-top:12px}.profilebar select{flex:1}.gamepanel,.mission{background:linear-gradient(145deg,#171d30,#101522);border:1px solid #39436b;border-radius:17px;padding:16px;margin:10px 0}.gamepanel h2{color:#e5dcff}.xpbar{height:10px;background:#282d43;border-radius:20px;overflow:hidden}.xpbar span{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));width:0}.game-action{width:100%;padding:14px;border:0;border-radius:12px;background:linear-gradient(100deg,#7053c8,#337fbb);color:white;font-weight:900;letter-spacing:.08em}.game-exercise{background:#1b2034;border:1px solid #4d477a;border-radius:16px;padding:18px;margin:14px 0}.reward{font-size:30px;color:var(--gold);font-weight:900;text-align:center}nav{display:flex;gap:7px;overflow:auto;padding:13px 0;position:sticky;top:0;background:var(--bg);z-index:4}
 nav button,.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:10px 13px;border-radius:12px;font-weight:700;white-space:nowrap}
 nav button.active,.primary{background:var(--green);color:#102016;border-color:var(--green)}
 section{display:none}section.active{display:block}
@@ -41,19 +41,19 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 <header><div class="wrap">
  <div class="brand"><span class="eyebrow">PREPARAÇÃO FÍSICA • MUAY THAI</span><span>🥊</span></div>
  <h1>MUAY THAI<br><span style="color:var(--green)">TRAINING</span></h1>
- <p>Treine com propósito. Acompanhe sua evolução.</p>
+ <p>Treine com propósito. Evolua a cada missão.</p><div class="profilebar"><span>JOGADOR</span><select id="profileSelect"></select><button class="btn" onclick="createProfile()">＋ Jogador</button></div>
 </div></header>
 <main class="wrap">
 <nav>
 <button class="active" data-tab="inicio">Início</button>
-<button data-tab="agenda">Agenda</button>
+<button data-tab="missoes">Missões</button><button data-tab="agenda">Agenda</button>
 <button data-tab="treinos">Treinos</button>
 <button data-tab="biblioteca">Biblioteca</button>
 <button data-tab="historico">Evolução</button>
 <button data-tab="timer">Cronômetro</button>
 </nav>
 <section id="inicio" class="active">
- <div class="card">
+ <div class="gamepanel"><div class="tag">SISTEMA DE CAÇADOR</div><h2 id="playerGreeting">Bem-vindo, caçador.</h2><div class="row"><b id="playerLevel">NÍVEL 1</b><b id="playerXp">0 / 100 XP</b></div><div class="xpbar"><span id="playerXpBar"></span></div><p id="playerTitle" class="small muted">Desperto</p><button class="game-action" onclick="showTab('missoes')">▶ INICIAR MISSÃO</button></div><div class="card">
   <div class="tag">Seu painel</div><h2>Consistência vence intensidade.</h2>
   <div class="stats">
    <div class="stat"><b id="weekCount">0</b><span class="small muted">sessões nesta semana</span></div>
@@ -66,7 +66,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
  <div id="homeSchedule" class="grid2"></div>
  <button class="btn primary full" onclick="showTab('treinos')">Abrir meus treinos</button>
 </section>
-<section id="agenda">
+<section id="missoes"><div class="tag">PAINEL DE MISSÕES</div><h2>Escolha sua missão</h2><p class="muted small">Selecione uma ficha para entrar no modo de treinamento.</p><div id="missionList"></div><button class="btn full" onclick="showTab('biblioteca')">＋ Criar ficha</button></section><section id="game"><div class="row"><button class="btn" onclick="showTab('missoes')">← Missões</button><span class="tag">MODO DE TREINO</span></div><div id="gameContent"></div></section><section id="agenda">
  <h2>Minha semana</h2><p class="muted small">Escolha quais fichas deseja fazer em cada dia. Você pode colocar mais de um treino no mesmo dia.</p><div id="scheduleEditor"></div><button class="btn primary full" onclick="saveSchedule()">Salvar minha agenda</button>
 </section>
 <section id="treinos">
@@ -77,7 +77,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
 <section id="biblioteca">
  <h2>Biblioteca de treinos</h2><p class="muted small">Crie fichas personalizadas sem alterar as fichas originais.</p>
  <div class="card"><h3>Criar nova ficha</h3><label>Nome do treino</label><input id="newWorkoutName" type="text" placeholder="Ex.: Mobilidade e core" style="width:100%"><label>Categoria</label><select id="newWorkoutCategory" style="width:100%"><option>Força</option><option>Potência</option><option>Resistência</option><option>Mobilidade</option><option>Condicionamento</option><option>Muay Thai</option><option>Personalizado</option></select><label>Exercícios iniciais (um por linha: nome | séries/repetições | observação | busca de vídeo)</label><textarea id="newWorkoutItems" placeholder="Agachamento goblet | 3 x 10 | Controle a descida | agachamento goblet execução&#10;Prancha | 3 x 30 s | Tronco firme | prancha exercício"></textarea><button class="btn primary full" onclick="createWorkout()">Criar ficha</button></div>
- <div id="libraryList"></div>
+ <div id="libraryList"></div><div class="card"><h3>Renomear ficha</h3><select id="renameWorkoutSelect" style="width:100%"></select><input id="renameWorkoutName" placeholder="Novo nome da ficha" style="width:100%"><button class="btn primary full" onclick="renameWorkout()">Salvar nome</button></div>
  <div class="card"><h3>Adicionar exercício a uma ficha personalizada</h3><label>Ficha</label><select id="editWorkoutSelect" style="width:100%"></select><label>Nome do exercício</label><input id="newExerciseName" placeholder="Ex.: Flexão de braço" style="width:100%"><label>Séries e repetições</label><input id="newExerciseReps" placeholder="3 x 12" style="width:100%"><label>Observação</label><textarea id="newExerciseNotes" placeholder="Como executar ou adaptar..."></textarea><label>Busca de vídeo</label><input id="newExerciseVideo" placeholder="flexão de braço execução" style="width:100%"><button class="btn primary full" onclick="addExerciseToWorkout()">Adicionar exercício</button></div>
 </section>
 <section id="historico">
@@ -142,13 +142,19 @@ const workouts = [
 ]}
 ];
 const KEY="mtt_v1";
-let data=JSON.parse(localStorage.getItem(KEY)||'{"checks":{},"sessions":[]}');
-data.checks=data.checks||{}; data.sessions=data.sessions||[]; data.loadHistory=data.loadHistory||[]; data.customWorkouts=data.customWorkouts||[]; data.schedule=data.schedule||{"0":["builtin-0"],"1":["muaythai"],"2":["builtin-1"],"3":["builtin-2"],"4":["muaythai"],"5":["builtin-3"],"6":[]};
-let selected=0, timerSeconds=90, interval=null;
-function save(){localStorage.setItem(KEY,JSON.stringify(data));updateStats()}
-function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));if(id==="historico")renderHistory();if(id==="agenda")renderSchedule();if(id==="biblioteca")renderLibrary();if(id==="inicio")renderHomeSchedule()}
+const emptyData=()=>({checks:{},missionChecks:{},sessions:[],loadHistory:[],customWorkouts:[],workoutOverrides:{},schedule:{"0":["builtin-0"],"1":["muaythai"],"2":["builtin-1"],"3":["builtin-2"],"4":["muaythai"],"5":["builtin-3"],"6":[]}});
+let stored=JSON.parse(localStorage.getItem(KEY)||"null"),profiles=[],activeProfileId="";
+if(stored&&Array.isArray(stored.profiles)){profiles=stored.profiles;activeProfileId=stored.activeProfileId||profiles[0]?.id||""}
+else{profiles=[{id:"player-main",name:"Jogador",level:1,xp:0,title:"Desperto",data:{...emptyData(),...(stored||{})}}];activeProfileId="player-main"}
+if(!profiles.length){profiles=[{id:"player-main",name:"Jogador",level:1,xp:0,title:"Desperto",data:emptyData()}];activeProfileId="player-main"}
+let activeProfile=profiles.find(p=>p.id===activeProfileId)||profiles[0];activeProfileId=activeProfile.id;
+let data={...emptyData(),...(activeProfile.data||{})};activeProfile.data=data;
+let selected=0,timerSeconds=90,interval=null,gameWorkoutId=null,gameIndex=0,gameFinished=false,freeMissionActive=false;
+function persistProfiles(){activeProfile.data=data;localStorage.setItem(KEY,JSON.stringify({schema:2,activeProfileId,profiles}))}
+function save(){persistProfiles();updateStats()}
+function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.toggle("active",s.id===id));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));if(id==="historico")renderHistory();if(id==="agenda")renderSchedule();if(id==="biblioteca")renderLibrary();if(id==="inicio")renderHomeSchedule();if(id==="missoes")renderMissions();if(id==="game")renderGame()}
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-function allWorkouts(){return workouts.map((w,i)=>({id:"builtin-"+i,name:w.name,category:"Musculação",items:w.items,builtin:true,index:i})).concat(data.customWorkouts.map(w=>({...w,builtin:false})))}
+function allWorkouts(){return workouts.map((w,i)=>({id:"builtin-"+i,name:(data.workoutOverrides["builtin-"+i]||{}).name||w.name,category:"Musculação",items:w.items,builtin:true,index:i})).concat(data.customWorkouts.map(w=>({...w,builtin:false})))}
 function workoutById(id){return allWorkouts().find(w=>w.id===String(id))}
 function workoutKey(w,j){return w.builtin?w.index+"-"+j:w.id+"-"+j}
 function selectedWorkout(){return typeof selected==="number"?workoutById("builtin-"+selected):workoutById(selected)}
@@ -169,7 +175,7 @@ function recordLoad(workoutId,exerciseIndex){
  if(kg!==null)data.checks[id+"_kg"]=String(kg);save();renderHistory();alert("Registro de carga salvo!");
 }
 function updateWorkProgress(){let w=selectedWorkout();if(!w)return;let n=w.items.length,done=w.items.filter((_,j)=>data.checks[workoutKey(w,j)]).length;let p=document.getElementById("workProgress");if(p)p.style.width=(n?done/n*100:0)+"%";let c=document.getElementById("workCount");if(c)c.textContent=done+" de "+n+" exercícios concluídos"}
-function finishWorkout(name){data.sessions.unshift({type:name,date:new Date().toISOString(),note:"Treino concluído"});save();alert("Check-in registrado! Bom trabalho.");}
+function finishWorkout(name){data.sessions.unshift({type:name,date:new Date().toISOString(),note:"Treino concluído"});awardXP(50);alert("Check-in registrado! +50 XP.");}
 function startFreeWorkout(){data.sessions.unshift({type:"Treino livre",date:new Date().toISOString(),note:"Sessão iniciada sem ficha programada"});save();alert("Sessão livre registrada!");}
 document.getElementById("saveSession").onclick=()=>{let note=document.getElementById("sessionNote").value.trim();data.sessions.unshift({type:document.getElementById("sessionType").value,date:new Date().toISOString(),note});document.getElementById("sessionNote").value="";save();renderHistory();alert("Check-in salvo!")};
 function renderHistory(){
@@ -223,8 +229,10 @@ function createWorkout(){
  renderLibrary();selectWorkout(id);showTab("treinos");alert("Ficha criada! Adicione exercícios e coloque-a na agenda.");
 }
 function renderLibrary(){
- let list=document.getElementById("libraryList"),sel=document.getElementById("editWorkoutSelect");if(!list||!sel)return;
- let all=allWorkouts();sel.innerHTML=all.map(w=>'<option value="'+w.id+'">'+escapeHtml(w.name)+'</option>').join("");
+ let list=document.getElementById("libraryList"),sel=document.getElementById("editWorkoutSelect"),ren=document.getElementById("renameWorkoutSelect");if(!list||!sel)return;
+ let all=allWorkouts();
+ sel.innerHTML=all.map(w=>'<option value="'+w.id+'">'+escapeHtml(w.name)+'</option>').join("");
+ if(ren)ren.innerHTML=all.map(w=>'<option value="'+w.id+'">'+escapeHtml(w.name)+'</option>').join("");
  list.innerHTML=all.map(w=>'<div class="card"><div class="row"><div><div class="tag">'+escapeHtml(w.category||"Treino")+'</div><h3>'+escapeHtml(w.name)+'</h3><p class="small muted">'+w.items.length+' exercício(s)'+(w.builtin?' · ficha original':' · personalizada')+'</p></div>'+(w.builtin?'<span class="tag">Original</span>':'<button class="btn" onclick="deleteWorkout(\''+w.id+'\')">Excluir</button>')+'</div><div class="actions"><button class="btn" onclick="selectWorkout(\''+w.id+'\');showTab(\'treinos\')">Abrir ficha</button></div></div>').join("");
 }
 function addExerciseToWorkout(){
@@ -263,9 +271,67 @@ function importBackup(input){
  reader.readAsText(file);
 }
 
+
+function renderProfile(){
+ const p=activeProfile,need=100+((p.level||1)-1)*25,xp=p.xp||0;
+ document.getElementById("profileSelect").innerHTML=profiles.map(x=>'<option value="'+x.id+'" '+(x.id===activeProfileId?'selected':'')+'>'+escapeHtml(x.name)+'</option>').join("");
+ document.getElementById("profileSelect").onchange=e=>switchProfile(e.target.value);
+ document.getElementById("playerGreeting").textContent="Bem-vindo, "+p.name+".";
+ document.getElementById("playerLevel").textContent="NÍVEL "+(p.level||1);
+ document.getElementById("playerXp").textContent=xp+" / "+need+" XP";
+ document.getElementById("playerXpBar").style.width=Math.min(100,xp/need*100)+"%";
+ document.getElementById("playerTitle").textContent=p.title||"Desperto";
+}
+function switchProfile(id){
+ persistProfiles();const p=profiles.find(x=>x.id===id);if(!p)return;
+ activeProfile=p;activeProfileId=id;data={...emptyData(),...(p.data||{})};p.data=data;
+ selected=0;render();showTab("inicio");
+}
+function createProfile(){
+ const name=prompt("Nome do novo jogador:");if(!name||!name.trim())return;
+ persistProfiles();const id="player-"+Date.now().toString(36);
+ profiles.push({id,name:name.trim().slice(0,24),level:1,xp:0,title:"Desperto",data:emptyData()});switchProfile(id);
+}
+function awardXP(amount){
+ const old=activeProfile.level||1;activeProfile.xp=(activeProfile.xp||0)+amount;
+ while(activeProfile.xp>=100+((activeProfile.level||1)-1)*25){activeProfile.xp-=100+((activeProfile.level||1)-1)*25;activeProfile.level=(activeProfile.level||1)+1}
+ save();renderProfile();return activeProfile.level-old;
+}
+function renderMissions(){
+ const root=document.getElementById("missionList");if(!root)return;
+ root.innerHTML=allWorkouts().map(w=>'<div class="mission"><div class="tag">'+escapeHtml(w.category||"MISSÃO")+'</div><h2>'+escapeHtml(w.name)+'</h2><p class="muted small">'+w.items.length+' exercícios · Recompensa: '+(50+w.items.length*10)+' XP</p><button class="game-action" onclick=\'beginMission("'+w.id+'")\'>ACEITAR MISSÃO</button></div>').join("")+'<div class="mission"><div class="tag">MISSÃO LIVRE</div><h2>Treino livre</h2><button class="btn" onclick="beginFreeMission()">INICIAR TREINO LIVRE</button></div>';
+}
+function beginMission(id){const w=workoutById(id);if(!w)return;if(!w.items.length){alert("Esta ficha ainda não tem exercícios.");return}gameWorkoutId=id;gameIndex=0;gameFinished=false;freeMissionActive=false;data.missionChecks=data.missionChecks||{};w.items.forEach((_,i)=>{data.missionChecks[workoutKey(w,i)]=false});save();showTab("game")}
+function beginFreeMission(){gameWorkoutId=null;gameIndex=0;gameFinished=false;freeMissionActive=true;showTab("game")}
+function finishFreeMission(){if(!freeMissionActive||gameFinished)return;data.sessions.unshift({type:"Treino livre",date:new Date().toISOString(),note:"Treino livre concluído"});freeMissionActive=false;gameFinished=true;awardXP(50);renderGame()}
+function renderGame(){
+ const root=document.getElementById("gameContent"),w=gameWorkoutId?workoutById(gameWorkoutId):null;if(!root)return;
+ if(!w){if(gameFinished){root.innerHTML='<div class="gamepanel"><div class="tag">MISSÃO CONCLUÍDA</div><h2>Treino livre</h2><div class="reward">+50 XP</div><button class="game-action" onclick="showTab(\'missoes\')">RETORNAR AO PAINEL</button></div>';return}root.innerHTML='<div class="gamepanel"><div class="tag">MISSÃO LIVRE</div><h2>Treino livre</h2><p class="muted">Use o cronômetro durante o treino. Ao terminar, conclua a missão para registrar a sessão e receber XP.</p><button class="btn full" onclick="showTab(\'timer\')">ABRIR CRONÔMETRO</button><button class="game-action" onclick="finishFreeMission()">CONCLUIR TREINO LIVRE · +50 XP</button></div>';return}
+ if(gameFinished){root.innerHTML='<div class="gamepanel"><div class="tag">MISSÃO CONCLUÍDA</div><h2>'+escapeHtml(w.name)+'</h2><div class="reward">+'+(50+w.items.length*10)+' XP</div><p>Treino registrado. Boa evolução!</p><button class="game-action" onclick="showTab(\'missoes\')">RETORNAR AO PAINEL</button></div>';return}
+ const it=w.items[gameIndex],id=workoutKey(w,gameIndex),done=w.items.filter((_,j)=>data.missionChecks&&data.missionChecks[workoutKey(w,j)]).length;
+ root.innerHTML='<div class="gamepanel"><div class="row"><span class="tag">MISSÃO ATIVA</span><b>NÍVEL '+activeProfile.level+'</b></div><h2>'+escapeHtml(w.name)+'</h2><div class="row"><span class="small muted">PROGRESSO</span><b>'+done+' / '+w.items.length+'</b></div><div class="xpbar"><span style="width:'+(done/w.items.length*100)+'%"></span></div><div class="game-exercise"><div class="tag">EXERCÍCIO '+(gameIndex+1)+' DE '+w.items.length+'</div><h2>'+escapeHtml(it[0])+'</h2><div class="reward" style="font-size:20px">'+escapeHtml(it[1]||"A definir")+'</div><p class="muted">'+escapeHtml(it[2]||"")+'</p><label>Carga (kg) <input id="gameLoad" type="number" min="0" step="0.5" placeholder="Opcional"></label><div class="actions"><button class="btn" onclick="recordGameLoad()">Salvar carga</button><a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+encodeURIComponent(it[3]||it[0])+'">▶ Vídeo demonstrativo</a></div></div><button class="game-action" onclick="completeGameExercise()">'+(gameIndex===w.items.length-1?'CONCLUIR MISSÃO':'CONCLUIR EXERCÍCIO')+'</button><button class="btn full" onclick="gameIndex=Math.max(0,gameIndex-1);renderGame()">← Exercício anterior</button><p class="small muted">A recompensa é liberada ao concluir a missão inteira.</p></div>';
+}
+function recordGameLoad(){
+ const w=workoutById(gameWorkoutId),it=w.items[gameIndex],raw=document.getElementById("gameLoad").value.trim();if(!raw){alert("Informe uma carga.");return}
+ const kg=Number(raw);if(!Number.isFinite(kg)||kg<0){alert("Carga inválida.");return}
+ data.loadHistory.unshift({exercise:it[0],workout:w.name,kg,isBody:false,date:new Date().toISOString()});save();alert("Carga registrada!");
+}
+function completeGameExercise(){
+ const w=workoutById(gameWorkoutId),id=workoutKey(w,gameIndex);data.missionChecks=data.missionChecks||{};data.missionChecks[id]=true;save();
+ if(gameIndex<w.items.length-1){gameIndex++;renderGame();return}
+ data.sessions.unshift({type:w.name,date:new Date().toISOString(),note:"Missão concluída no modo RPG"});
+ awardXP(50+w.items.length*10);gameFinished=true;renderGame();
+}
+function renameWorkout(){
+ const id=document.getElementById("renameWorkoutSelect").value,name=document.getElementById("renameWorkoutName").value.trim();if(!name){alert("Digite o novo nome.");return}
+ const w=workoutById(id);if(!w)return;
+ if(w.builtin)data.workoutOverrides[id]={name};else{const custom=data.customWorkouts.find(x=>x.id===id);if(custom)custom.name=name}
+ document.getElementById("renameWorkoutName").value="";save();renderLibrary();renderMissions();renderWorkouts();alert("Nome atualizado!");
+}
+
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function updateStats(){let now=new Date(),monday=new Date(now);monday.setDate(now.getDate()-((now.getDay()+6)%7));monday.setHours(0,0,0,0);document.getElementById("allCount").textContent=data.sessions.length;document.getElementById("weekCount").textContent=data.sessions.filter(s=>new Date(s.date)>=monday).length;document.getElementById("exerciseCount").textContent=Object.keys(data.checks).filter(k=>!k.endsWith("_kg")&&data.checks[k]).length}
-function render(){renderWorkouts();renderHistory();updateStats();renderHomeSchedule()}
+function render(){renderWorkouts();renderHistory();updateStats();renderHomeSchedule();renderProfile();renderMissions();renderLibrary()}
 function setClock(){document.getElementById("clock").textContent=String(Math.floor(timerSeconds/60)).padStart(2,"0")+":"+String(timerSeconds%60).padStart(2,"0")}
 document.querySelectorAll("[data-seconds]").forEach(b=>b.onclick=()=>{timerSeconds=+b.dataset.seconds;clearInterval(interval);interval=null;document.getElementById("startTimer").textContent="Iniciar";setClock()});
 document.getElementById("startTimer").onclick=()=>{if(interval){clearInterval(interval);interval=null;document.getElementById("startTimer").textContent="Continuar";return}document.getElementById("startTimer").textContent="Pausar";interval=setInterval(()=>{if(timerSeconds>0){timerSeconds--;setClock()}else{clearInterval(interval);interval=null;document.getElementById("startTimer").textContent="Iniciar";if(navigator.vibrate)navigator.vibrate([250,100,250]);alert("Descanso concluído!")}},1000)};
